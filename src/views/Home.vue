@@ -6,15 +6,15 @@
     <!-- 主横幅区域 -->
     <div class="hero-section">
       <div class="hero-banner">
-        <img :src="bannerImage" alt="薪跃" class="banner-image" />
+        <div class="banner-image" role="img" aria-label="薪跃技术挑战平台" />
         <div class="hero-overlay">
           <div class="hero-content">
             <h1 class="hero-title">薪跃</h1>
-            <div class="hero-subtitle">沙场点兵 · 技艺精进</div>
+            <div class="hero-subtitle">AI 技术挑战 · 薪资成长</div>
             <p class="hero-desc">
-              如古之名将练兵于沙场，今之程序员磨技于此地<br>
-              通过AI生成的技术关卡，提升需求分析、方案设计之能<br>
-              评估技术水平，助君在编程之路上策马扬鞭
+              根据你的薪资水平，生成贴近真实业务场景的技术挑战<br>
+              在答题与复盘中提升技术能力，记录每一次成长<br>
+              用清晰的能力评估和投递建议，找到更适合你的机会
             </p>
             
             <div class="hero-actions" :class="{ 'logged-in': isLoggedIn }">
@@ -39,7 +39,7 @@
       <div class="features-section">
         <div class="section-header">
           <h2 class="section-title">薪跃特色</h2>
-          <div class="section-subtitle">如古之兵法，今之技艺</div>
+          <div class="section-subtitle">从技术挑战到职业成长</div>
         </div>
         
         <div class="features-grid">
@@ -47,8 +47,8 @@
             <div class="feature-icon">
               <el-icon size="48"><MagicStick /></el-icon>
             </div>
-            <h3>智能生成</h3>
-            <p>如孙武练兵，AI生成真实企业场景<br>丰富技术选项，考验决策智慧</p>
+            <h3>AI 生成关卡</h3>
+            <p>根据当前薪资水平动态生成技术挑战<br>覆盖真实企业场景与多种技术选项</p>
             <div class="feature-decoration"></div>
           </el-card>
           
@@ -56,8 +56,8 @@
             <div class="feature-icon">
               <el-icon size="48"><TrendCharts /></el-icon>
             </div>
-            <h3>能力评估</h3>
-            <p>根据答题表现动态调整身价<br>准确评估技术水平，知己知彼</p>
+            <h3>薪资与能力评估</h3>
+            <p>基于答题表现评估技术水平<br>用数据记录能力变化与薪资成长</p>
             <div class="feature-decoration"></div>
           </el-card>
           
@@ -65,8 +65,8 @@
             <div class="feature-icon">
               <el-icon size="48"><Guide /></el-icon>
             </div>
-            <h3>策略指导</h3>
-            <p>提供投递建议和技术解析<br>助君在职场征途中运筹帷幄</p>
+            <h3>复盘与投递建议</h3>
+            <p>查看完整挑战历史和技术解析<br>结合能力水平获得更有针对性的职位建议</p>
             <div class="feature-decoration"></div>
           </el-card>
         </div>
@@ -143,7 +143,6 @@ import {
   User,
   Trophy
 } from '@element-plus/icons-vue'
-import bannerImage from '../assets/banner.png'
 import GlobalNavbar from '../components/GlobalNavbar.vue'
 
 const router = useRouter()
@@ -240,7 +239,11 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.7) sepia(0.3) saturate(1.2);
+  background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=2400&q=85');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: brightness(0.68) saturate(0.9);
 }
 
 .hero-overlay {
@@ -251,9 +254,9 @@ onMounted(() => {
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(60, 36, 21, 0.8) 0%,
-    rgba(139, 115, 85, 0.6) 50%,
-    rgba(210, 180, 140, 0.4) 100%
+    rgba(10, 24, 38, 0.86) 0%,
+    rgba(19, 54, 75, 0.66) 52%,
+    rgba(25, 107, 112, 0.42) 100%
   );
   display: flex;
   align-items: center;
