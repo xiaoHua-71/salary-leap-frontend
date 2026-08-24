@@ -5,7 +5,7 @@
       <div class="footer-section logo-section">
         <div class="footer-logo">
           <el-icon class="logo-icon" :size="48"><Trophy /></el-icon>
-          <h5 class="logo-text">程序员技术练兵场</h5>
+          <h5 class="logo-text">薪跃</h5>
         </div>
         <div class="footer-links">
           <a href="#" class="footer-protocol-button">《用户协议》</a>

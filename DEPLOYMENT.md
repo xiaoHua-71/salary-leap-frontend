@@ -128,8 +128,8 @@ server {
 
 ### 3. 构建和运行
 ```bash
-docker build -t coder-test-frontend .
-docker run -p 80:80 coder-test-frontend
+docker build -t salary-leap-frontend .
+docker run -p 80:80 salary-leap-frontend
 ```
 
 ## 常见问题

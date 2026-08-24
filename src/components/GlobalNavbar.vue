@@ -3,7 +3,7 @@
     <div class="navbar-content">
       <div class="logo" @click="handleLogoClick">
         <el-icon class="logo-icon"><Flag /></el-icon>
-        <span class="logo-text">程序员技术练兵场</span>
+        <span class="logo-text">薪跃</span>
       </div>
       
       <div class="nav-menu">

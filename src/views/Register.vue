@@ -11,7 +11,7 @@
             <el-icon><UserFilled /></el-icon>
           </div>
           <h2>新兵入伍</h2>
-          <p>加入程序员技术练兵场，在技术沙场中磨砺成长</p>
+          <p>加入薪跃，在技术沙场中磨砺成长</p>
         </div>
 
       <el-form

@@ -6,10 +6,10 @@
     <!-- 主横幅区域 -->
     <div class="hero-section">
       <div class="hero-banner">
-        <img :src="bannerImage" alt="技术练兵场" class="banner-image" />
+        <img :src="bannerImage" alt="薪跃" class="banner-image" />
         <div class="hero-overlay">
           <div class="hero-content">
-            <h1 class="hero-title">程序员技术练兵场</h1>
+            <h1 class="hero-title">薪跃</h1>
             <div class="hero-subtitle">沙场点兵 · 技艺精进</div>
             <p class="hero-desc">
               如古之名将练兵于沙场，今之程序员磨技于此地<br>
@@ -38,7 +38,7 @@
       <!-- 特色功能 -->
       <div class="features-section">
         <div class="section-header">
-          <h2 class="section-title">练兵场特色</h2>
+          <h2 class="section-title">薪跃特色</h2>
           <div class="section-subtitle">如古之兵法，今之技艺</div>
         </div>
         
