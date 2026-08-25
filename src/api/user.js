@@ -5,6 +5,11 @@ export const register = (data) => {
   return request.post('/user/register', data)
 }
 
+// 发送邮箱注册验证码
+export const sendRegisterCode = (email) => {
+  return request.post('/user/sendCode', { email })
+}
+
 // 用户登录
 export const login = (data) => {
   return request.post('/user/login', data)

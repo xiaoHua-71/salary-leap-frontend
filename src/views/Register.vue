@@ -21,23 +21,62 @@
         class="register-form"
         @submit.prevent="handleRegister"
       >
-        <el-form-item prop="username">
-          <el-input
-            v-model="registerForm.username"
-            placeholder="请输入用户名"
-            size="large"
-            :prefix-icon="User"
-          />
+        <el-form-item class="register-type-item">
+          <el-radio-group v-model="registerType" class="register-type-group">
+            <el-radio-button label="password">密码注册</el-radio-button>
+            <el-radio-button label="email">邮箱注册</el-radio-button>
+          </el-radio-group>
         </el-form-item>
 
-        <el-form-item prop="nickname">
-          <el-input
-            v-model="registerForm.nickname"
-            placeholder="请输入昵称"
-            size="large"
-            :prefix-icon="Avatar"
-          />
-        </el-form-item>
+        <template v-if="registerType === 'password'">
+          <el-form-item prop="username">
+            <el-input
+              v-model="registerForm.username"
+              placeholder="请输入用户名"
+              size="large"
+              :prefix-icon="User"
+            />
+          </el-form-item>
+
+          <el-form-item prop="nickname">
+            <el-input
+              v-model="registerForm.nickname"
+              placeholder="请输入昵称"
+              size="large"
+              :prefix-icon="Avatar"
+            />
+          </el-form-item>
+        </template>
+
+        <template v-else>
+          <el-form-item prop="email">
+            <el-input
+              v-model="registerForm.email"
+              placeholder="请输入邮箱"
+              size="large"
+              :prefix-icon="Message"
+            />
+          </el-form-item>
+
+          <el-form-item prop="code">
+            <el-input
+              v-model="registerForm.code"
+              placeholder="请输入邮箱验证码"
+              size="large"
+              :prefix-icon="Key"
+            >
+              <template #append>
+                <el-button
+                  :disabled="codeSending || countdown > 0"
+                  :loading="codeSending"
+                  @click="handleSendCode"
+                >
+                  {{ countdown > 0 ? `${countdown}s 后重发` : '发送验证码' }}
+                </el-button>
+              </template>
+            </el-input>
+          </el-form-item>
+        </template>
 
         <el-form-item prop="password">
           <el-input
@@ -50,7 +89,7 @@
           />
         </el-form-item>
 
-        <el-form-item prop="checkPassword">
+        <el-form-item v-if="registerType === 'password'" prop="checkPassword">
           <el-input
             v-model="registerForm.checkPassword"
             type="password"
@@ -96,7 +135,9 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { User, Lock, Avatar, UserFilled, Flag } from '@element-plus/icons-vue'
+import * as userApi from '../api/user'
+import { ElMessage } from 'element-plus'
+import { User, Lock, Avatar, Message, Key, UserFilled, Flag } from '@element-plus/icons-vue'
 import GlobalNavbar from '../components/GlobalNavbar.vue'
 
 const router = useRouter()
@@ -104,10 +145,16 @@ const userStore = useUserStore()
 
 const registerFormRef = ref()
 const loading = ref(false)
+const codeSending = ref(false)
+const countdown = ref(0)
+const registerType = ref('password')
+let countdownTimer
 
 const registerForm = reactive({
   username: '',
   nickname: '',
+  email: '',
+  code: '',
   password: '',
   checkPassword: ''
 })
@@ -133,12 +180,40 @@ const registerRules = {
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' }
+    { min: 8, max: 20, message: '密码长度在 8 到 20 个字符', trigger: 'blur' }
   ],
   checkPassword: [
     { required: true, message: '请确认密码', trigger: 'blur' },
     { validator: validateCheckPassword, trigger: 'blur' }
+  ],
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
+  ],
+  code: [
+    { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
   ]
+}
+
+const handleSendCode = async () => {
+  try {
+    await registerFormRef.value.validateField('email')
+    codeSending.value = true
+    await userApi.sendRegisterCode(registerForm.email)
+    ElMessage.success('验证码已发送')
+    countdown.value = 60
+    countdownTimer = setInterval(() => {
+      countdown.value -= 1
+      if (countdown.value <= 0) {
+        clearInterval(countdownTimer)
+        countdownTimer = undefined
+      }
+    }, 1000)
+  } catch (error) {
+    console.error('发送验证码失败:', error)
+  } finally {
+    codeSending.value = false
+  }
 }
 
 const handleRegister = async () => {
@@ -148,7 +223,22 @@ const handleRegister = async () => {
     await registerFormRef.value.validate()
     loading.value = true
     
-    await userStore.registerUser(registerForm)
+    const registerData = registerType.value === 'email'
+      ? {
+          registerType: 'email',
+          email: registerForm.email,
+          code: registerForm.code,
+          password: registerForm.password
+        }
+      : {
+          registerType: 'password',
+          username: registerForm.username,
+          nickname: registerForm.nickname,
+          password: registerForm.password,
+          checkPassword: registerForm.checkPassword
+        }
+
+    await userStore.registerUser(registerData)
     
     // 注册成功后跳转到登录页
     router.push('/login')
@@ -242,6 +332,23 @@ const handleRegister = async () => {
   margin-bottom: 30px;
 }
 
+.register-type-item {
+  justify-content: center;
+}
+
+.register-type-group {
+  width: 100%;
+  display: flex;
+}
+
+.register-type-group :deep(.el-radio-button) {
+  flex: 1;
+}
+
+.register-type-group :deep(.el-radio-button__inner) {
+  width: 100%;
+}
+
 .register-form :deep(.el-input) {
   margin-bottom: 18px;
 }
@@ -265,6 +372,17 @@ const handleRegister = async () => {
 .register-form :deep(.el-input__inner) {
   color: var(--text-primary);
   font-size: 16px;
+}
+
+.register-form :deep(.el-input-group__append) {
+  padding: 0;
+  background: var(--bg-secondary);
+}
+
+.register-form :deep(.el-input-group__append .el-button) {
+  margin: 0;
+  height: 40px;
+  color: var(--primary-brown);
 }
 
 .register-button {

@@ -34,3 +34,6 @@ dist-ssr
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Local API documentation
+apidoc/login/README.md
