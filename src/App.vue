@@ -47,6 +47,27 @@ onMounted(async () => {
   --shadow-heavy: rgba(139, 115, 85, 0.3);
 }
 
+/* Salary Leap brand palette */
+:root {
+  --primary-sand: #D9F3EE;
+  --primary-brown: #0F766E;
+  --secondary-sand: #ECFDF5;
+  --secondary-brown: #115E59;
+  --accent-gold: #F4B942;
+  --accent-copper: #E07A3F;
+  --text-primary: #102A43;
+  --text-secondary: #486581;
+  --text-muted: #829AB1;
+  --bg-primary: #F5FAF9;
+  --bg-secondary: #E8F3F1;
+  --bg-card: #FFFFFF;
+  --border-light: #CDE5E1;
+  --border-medium: #8BC8C0;
+  --shadow-light: rgba(15, 118, 110, 0.1);
+  --shadow-medium: rgba(15, 118, 110, 0.2);
+  --shadow-heavy: rgba(15, 118, 110, 0.3);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -54,7 +75,7 @@ onMounted(async () => {
 }
 
 body {
-  font-family: 'Source Han Serif SC', 'Noto Serif CJK SC', 'SimSun', '宋体', 'Times New Roman', serif;
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
   color: var(--text-primary);
   line-height: 1.6;
@@ -64,9 +85,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+  background: var(--bg-primary);
 }
 
 .app-content {

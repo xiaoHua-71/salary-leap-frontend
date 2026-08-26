@@ -4,7 +4,7 @@
 
 ### 前提条件
 1. 确保已安装 Node.js 16 或更高版本
-2. 确保后端服务已在 `http://localhost:8123` 运行
+2. 确保后端服务已在 `http://localhost:8101` 运行
 
 ### Windows 用户
 双击运行 `start.bat` 文件，或在命令行中执行：
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-访问地址：`http://localhost:3000`
+访问地址：`http://localhost:3001`
 
 ## 生产环境部署
 

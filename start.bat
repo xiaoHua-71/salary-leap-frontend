@@ -26,8 +26,8 @@ if not exist "node_modules" (
 )
 
 echo 启动开发服务器...
-echo 请确保后端服务已在 http://localhost:8123 运行
-echo 前端将在 http://localhost:3000 启动
+echo 请确保后端服务已在 http://localhost:8101 运行
+echo 前端将在 http://localhost:3001 启动
 echo ================================
 npm run dev
 

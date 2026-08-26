@@ -1,8 +1,8 @@
 import request from '../utils/request'
 
 // 生成关卡
-export const generateLevel = (data) => {
-  return request.post('/level/generate', data)
+export const generateLevel = (salary = 10000) => {
+  return request.post('/level/generate', null, { params: { salary } })
 }
 
 // 获取关卡详情

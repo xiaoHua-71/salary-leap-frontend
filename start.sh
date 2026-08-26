@@ -26,7 +26,7 @@ else
 fi
 
 echo "启动开发服务器..."
-echo "请确保后端服务已在 http://localhost:8123 运行"
+echo "请确保后端服务已在 http://localhost:8101 运行"
 echo "前端将在 http://localhost:3000 启动"
 echo "================================"
 

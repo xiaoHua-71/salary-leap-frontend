@@ -10,8 +10,8 @@
           <div class="header-icon">
             <el-icon><User /></el-icon>
           </div>
-          <h2>将士登营</h2>
-          <p>欢迎回到薪跃，准备征战技术沙场</p>
+          <h2>登录薪跃</h2>
+          <p>登录后继续你的技术成长之旅</p>
         </div>
 
       <el-form
@@ -51,20 +51,20 @@
             @click="handleLogin"
           >
             <el-icon><KnifeFork /></el-icon>
-            登营入伍
+            登录并开始挑战
           </el-button>
         </el-form-item>
       </el-form>
 
       <div class="login-footer">
         <p>
-          尚未入伍？
+          还没有薪跃账号？
           <el-link class="register-link" @click="$router.push('/register')">
-            立即入伍
+            立即注册
           </el-link>
         </p>
         <el-link class="home-link" @click="$router.push('/')">
-          返回营地
+          返回首页
         </el-link>
       </div>
       </div>
@@ -137,8 +137,8 @@ const handleLogin = async () => {
   justify-content: center;
   padding: 40px 20px;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(244, 185, 66, 0.10) 0%, transparent 50%);
 }
 
 .login-box {
@@ -220,7 +220,7 @@ const handleLogin = async () => {
 
 .login-form :deep(.el-input__wrapper.is-focus) {
   border-color: var(--primary-brown);
-  box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.2);
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
 }
 
 .login-form :deep(.el-input__inner) {

@@ -32,7 +32,10 @@ request.interceptors.response.use(
     if (data.code === 0) {
       return data.data
     } else {
-      ElMessage.error(data.message || '请求失败')
+      // 未登录由路由守卫负责跳转，避免首页初始化时弹出打扰性提示。
+      if (data.code !== 40100) {
+        ElMessage.error(data.message || '请求失败')
+      }
       return Promise.reject(new Error(data.message || '请求失败'))
     }
   },

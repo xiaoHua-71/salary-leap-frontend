@@ -9,35 +9,12 @@
         <el-card class="generate-card">
           <div class="generate-content">
             <h2>准备开始新的挑战</h2>
-            <p>选择你的学习方向，系统将根据你当前的薪资水平生成适合的技术关卡</p>
-            
-            <!-- 学习方向选择 -->
-            <div class="direction-selector">
-              <h3>选择学习方向</h3>
-              <el-select 
-                v-model="selectedDirection" 
-                placeholder="请选择学习方向"
-                size="large"
-                style="width: 300px; margin-bottom: 20px;"
-              >
-                <el-option 
-                  v-for="direction in directionOptions" 
-                  :key="direction.value" 
-                  :label="direction.label" 
-                  :value="direction.value"
-                >
-                  <span style="float: left">{{ direction.label }}</span>
-                  <span style="float: right; color: var(--text-muted); font-size: 13px">
-                    {{ direction.desc }}
-                  </span>
-                </el-option>
-              </el-select>
-            </div>
+            <p>系统将根据你当前的薪资水平，生成适合你的技术挑战</p>
             
             <el-button
               type="primary"
               size="large"
-              :disabled="generating || !selectedDirection"
+              :disabled="generating"
               @click="generateLevel"
             >
               <el-icon><MagicStick /></el-icon>
@@ -187,14 +164,14 @@
             <div class="options-grid">
               <div
                 v-for="option in availableOptions"
-                :key="option.optionName"
+                :key="option"
                 class="option-item"
-                :class="{ 'selected': selectedOptions.includes(option.optionName) }"
+                :class="{ 'selected': selectedOptions.includes(option) }"
                 draggable="true"
                 @dragstart="handleDragStart($event, option)"
                 @click="toggleOption(option)"
               >
-                {{ option.optionName }}
+                {{ option }}
               </div>
             </div>
           </div>
@@ -311,23 +288,6 @@ const featuredCurrent = ref(1)
 const featuredPageSize = ref(6)
 const featuredTotal = ref(0)
 
-// 学习方向相关数据
-const selectedDirection = ref('')
-const directionOptions = [
-  { value: '全栈开发', label: '全栈开发', desc: '前后端通吃' },
-  { value: '前端开发', label: '前端开发', desc: 'Web界面开发' },
-  { value: 'Java后端开发', label: 'Java后端开发', desc: '企业级后端' },
-  { value: 'Python后端开发', label: 'Python后端开发', desc: '快速开发' },
-  { value: '软件测试', label: '软件测试', desc: '质量保障' },
-  { value: 'AI算法', label: 'AI算法', desc: '人工智能' },
-  { value: '网络运维', label: '网络运维', desc: '系统运维' },
-  { value: '数据分析', label: '数据分析', desc: '数据洞察' },
-  { value: '移动端开发', label: '移动端开发', desc: 'App开发' },
-  { value: 'DevOps运维', label: 'DevOps运维', desc: '自动化运维' },
-  { value: '网络安全', label: '网络安全', desc: '安全防护' },
-  { value: '游戏开发', label: '游戏开发', desc: '游戏制作' }
-]
-
 // 进度条相关
 const generateProgress = ref(0)
 const submitProgress = ref(0)
@@ -421,7 +381,9 @@ const availableOptions = computed(() => {
     const options = typeof currentLevel.value.options === 'string' 
       ? JSON.parse(currentLevel.value.options) 
       : currentLevel.value.options
-    return options || []
+    return (options || [])
+      .map(option => typeof option === 'string' ? option : option?.optionName)
+      .filter(Boolean)
   } catch (error) {
     console.error('解析选项失败:', error)
     return []
@@ -464,11 +426,7 @@ const generateLevel = async () => {
   generateProgressInterval = simulateProgress(generateProgress, 'generate')
   
   try {
-    const requestData = { 
-      salary: userSalary,
-      direction: selectedDirection.value
-    }
-    const levelData = await generateLevelAPI(requestData)
+    const levelData = await generateLevelAPI(userSalary)
     currentLevel.value = levelData
     selectedOptions.value = []
     
@@ -499,7 +457,7 @@ const generateLevel = async () => {
 const handleDragStart = (event, option) => {
   draggedOption.value = option
   event.dataTransfer.effectAllowed = 'move'
-  event.dataTransfer.setData('text/plain', option.optionName)
+  event.dataTransfer.setData('text/plain', typeof option === 'string' ? option : option.optionName)
 }
 
 // 拖拽悬停
@@ -533,7 +491,7 @@ const handleDrop = (event) => {
 
 // 切换选项（添加或移除）
 const toggleOption = (option) => {
-  const optionName = option.optionName
+  const optionName = typeof option === 'string' ? option : option.optionName
   const index = selectedOptions.value.indexOf(optionName)
   
   if (index > -1) {
@@ -1098,6 +1056,100 @@ onUnmounted(() => {
 
 .submit-loading {
   margin-top: 15px;
+}
+
+/* 与首页“薪跃特色”保持一致的关卡视觉 */
+.challenge-container {
+  background: #f3f9f8;
+}
+
+.main-content {
+  max-width: 1180px;
+  padding: 56px 30px 80px;
+}
+
+.generate-section {
+  gap: 36px;
+}
+
+.generate-card,
+.featured-levels-card,
+.level-info-card {
+  border: 3px solid #cce7e3 !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  box-shadow: 0 14px 34px rgba(28, 91, 93, 0.12) !important;
+}
+
+.generate-card {
+  max-width: 760px;
+}
+
+.generate-card:hover,
+.featured-levels-card:hover,
+.level-info-card:hover {
+  border-color: #e7bf55 !important;
+  box-shadow: 0 18px 40px rgba(28, 91, 93, 0.16) !important;
+}
+
+.generate-content {
+  padding: 48px 34px;
+}
+
+.generate-content h2,
+.level-name,
+.options-area h3,
+.answer-area h3 {
+  color: #17324d;
+}
+
+.generate-content p,
+.desc-content,
+.featured-desc {
+  color: #557493;
+}
+
+.generate-content .el-button,
+.submit-area .el-button--primary {
+  background: #117f78 !important;
+  border-color: #117f78 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 18px rgba(17, 127, 120, 0.24);
+}
+
+.generate-content .el-button:hover,
+.submit-area .el-button--primary:hover {
+  background: #0c6b65 !important;
+  border-color: #0c6b65 !important;
+}
+
+.featured-item,
+.option-item,
+.answer-box {
+  border-color: #cce7e3;
+  border-radius: 10px;
+}
+
+.featured-item:hover,
+.option-item:hover {
+  border-color: #e7bf55;
+  box-shadow: 0 10px 24px rgba(28, 91, 93, 0.14);
+}
+
+.option-item.selected {
+  background: #117f78;
+  border-color: #117f78;
+  color: #fff;
+}
+
+.desc-content {
+  background: #f7fbfa;
+  border-left: 4px solid #e7bf55;
+}
+
+.selected-option {
+  background: #17324d;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {

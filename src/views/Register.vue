@@ -10,8 +10,8 @@
           <div class="header-icon">
             <el-icon><UserFilled /></el-icon>
           </div>
-          <h2>新兵入伍</h2>
-          <p>加入薪跃，在技术沙场中磨砺成长</p>
+          <h2>创建薪跃账号</h2>
+          <p>加入薪跃，记录每一次能力跃升</p>
         </div>
 
       <el-form
@@ -110,20 +110,20 @@
             @click="handleRegister"
           >
             <el-icon><Flag /></el-icon>
-            立即入伍
+            创建账号
           </el-button>
         </el-form-item>
       </el-form>
 
       <div class="register-footer">
         <p>
-          已是将士？
+          已有薪跃账号？
           <el-link class="login-link" @click="$router.push('/login')">
-            立即登营
+            立即登录
           </el-link>
         </p>
         <el-link class="home-link" @click="$router.push('/')">
-          返回营地
+          返回首页
         </el-link>
       </div>
       </div>
@@ -266,8 +266,8 @@ const handleRegister = async () => {
   justify-content: center;
   padding: 40px 20px;
   background-image: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(244, 185, 66, 0.10) 0%, transparent 50%);
 }
 
 .register-box {
@@ -366,7 +366,7 @@ const handleRegister = async () => {
 
 .register-form :deep(.el-input__wrapper.is-focus) {
   border-color: var(--primary-brown);
-  box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.2);
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
 }
 
 .register-form :deep(.el-input__inner) {
