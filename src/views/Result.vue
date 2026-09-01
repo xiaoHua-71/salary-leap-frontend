@@ -174,7 +174,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { getUserLevelDetail } from '../api/userLevel'
 import { ElMessage } from 'element-plus'
 import { Viewer } from '@bytemd/vue-next'
 import gfm from '@bytemd/plugin-gfm'
@@ -250,25 +249,14 @@ const getSalaryChangeClass = (change) => {
 
 // 获取结果详情
 const fetchResultDetail = async () => {
-  const id = route.params.id
-  console.log('结果页面 - 路由参数 ID:', id)
-  
-  if (!id) {
-    ElMessage.error('无效的结果ID')
-    router.push('/history')
-    return
-  }
-
   loading.value = true
   try {
-    console.log('开始获取结果详情:', id)
-    const data = await getUserLevelDetail(id)
-    console.log('获取到的结果数据:', data)
-    resultData.value = data
+    const cachedReport = sessionStorage.getItem('latestLevelReport')
+    if (!cachedReport) throw new Error('结果不存在')
+    resultData.value = JSON.parse(cachedReport)
   } catch (error) {
-    console.error('获取结果详情失败:', error)
-    ElMessage.error('获取结果详情失败')
-    router.push('/history')
+    ElMessage.error('结果不存在，请先完成关卡')
+    router.push('/challenge')
   } finally {
     loading.value = false
   }

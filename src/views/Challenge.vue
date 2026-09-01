@@ -530,9 +530,10 @@ const submitAnswer = async () => {
     console.log('提交答案结果:', result)
     
     // 更新用户薪资
-    if (result.salaryChange) {
-      const newSalary = user.value.salary + result.salaryChange
-      userStore.updateUserSalary(newSalary)
+    if (typeof result.newSalary === 'number') {
+      userStore.updateUserSalary(result.newSalary)
+    } else if (result.salaryChange) {
+      userStore.updateUserSalary(user.value.salary + result.salaryChange)
     }
     
     // 完成进度条
@@ -540,8 +541,8 @@ const submitAnswer = async () => {
     
     // 短暂延迟后跳转，让用户看到100%
     setTimeout(() => {
-      console.log('准备跳转到结果页面:', `/result/${result.id}`)
-      router.push(`/result/${result.id}`)
+      sessionStorage.setItem('latestLevelReport', JSON.stringify(result))
+      router.push(`/result/${result.levelId || currentLevel.value.id}`)
     }, 300)
     
   } catch (error) {

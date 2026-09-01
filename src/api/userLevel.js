@@ -2,7 +2,7 @@ import request from '../utils/request'
 
 // 提交答案
 export const submitAnswer = (data) => {
-  return request.post('/user-level/submit', data)
+  return request.post('/level/submit', data)
 }
 
 // 获取闯关详情
