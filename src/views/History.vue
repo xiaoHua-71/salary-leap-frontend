@@ -7,13 +7,13 @@
       <div class="page-header">
         <div class="header-content">
           <div class="header-text">
-            <h1>征战记录</h1>
-            <p>回顾沙场征战历程，见证技艺精进之路</p>
+            <h1>闯关历史</h1>
+            <p>回顾每一次答题表现，见证你的能力与薪资成长</p>
           </div>
           <div class="header-actions">
             <el-button type="primary" size="large" @click="$router.push('/challenge')">
               <el-icon><KnifeFork /></el-icon>
-              继续征战
+              继续闯关
             </el-button>
           </div>
         </div>
@@ -29,8 +29,8 @@
                   <el-icon size="30"><Trophy /></el-icon>
                 </div>
                 <div class="stat-info">
-                  <div class="stat-number">{{ historyList.length }}</div>
-                  <div class="stat-label">总挑战次数</div>
+                  <div class="stat-number">{{ summary.totalCount }}</div>
+                  <div class="stat-label">累计闯关次数</div>
                 </div>
               </div>
             </el-card>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="stat-info">
                   <div class="stat-number">{{ averageScore }}</div>
-                  <div class="stat-label">平均分数</div>
+                  <div class="stat-label">平均得分</div>
                 </div>
               </div>
             </el-card>
@@ -57,8 +57,8 @@
                   <el-icon size="30"><Coin /></el-icon>
                 </div>
                 <div class="stat-info">
-                  <div class="stat-number">{{ user?.salary?.toLocaleString() || 0 }}</div>
-                  <div class="stat-label">当前薪资</div>
+                  <div class="stat-number">¥{{ (summary.currentSalary || user?.salary || 0).toLocaleString() }}</div>
+                  <div class="stat-label">当前月薪</div>
                 </div>
               </div>
             </el-card>
@@ -72,9 +72,9 @@
                 </div>
                 <div class="stat-info">
                   <div class="stat-number" :class="totalSalaryChangeClass">
-                    {{ totalSalaryChange > 0 ? '+' : '' }}{{ totalSalaryChange }}
+                    ¥{{ totalSalaryChange > 0 ? '+' : '' }}{{ totalSalaryChange.toLocaleString() }}
                   </div>
-                  <div class="stat-label">薪资变化</div>
+                  <div class="stat-label">累计薪资变化</div>
                 </div>
               </div>
             </el-card>
@@ -87,7 +87,7 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>挑战记录</span>
+              <span>答题记录</span>
               <el-button type="primary" @click="refreshHistory">
                 <el-icon><Refresh /></el-icon>
                 刷新
@@ -97,10 +97,10 @@
 
           <div v-loading="loading" class="history-list">
             <div v-if="historyList.length === 0" class="empty-state">
-              <el-empty description="尚未有征战记录">
+              <el-empty description="还没有闯关记录">
                 <el-button type="primary" @click="$router.push('/challenge')">
                   <el-icon><KnifeFork /></el-icon>
-                  踏上征程
+                  开始第一次闯关
                 </el-button>
               </el-empty>
             </div>
@@ -127,7 +127,7 @@
                   
                   <div class="item-actions">
                     <div class="salary-change" :class="getSalaryChangeClass(item.salaryChange)">
-                      薪资{{ item.salaryChange > 0 ? '+' : '' }}{{ item.salaryChange }}
+                      薪资 {{ item.salaryChange > 0 ? '+' : '' }}{{ Number(item.salaryChange || 0).toLocaleString() }} 元
                     </div>
                     <el-icon class="arrow-icon"><ArrowRight /></el-icon>
                   </div>
@@ -149,7 +149,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { getUserLevelHistory } from '../api/userLevel'
+import { getRecordList, getRecordSummary } from '../api/userLevel'
 import { ElMessage } from 'element-plus'
 import {
   Trophy,
@@ -168,17 +168,21 @@ const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const loading = ref(false)
 const historyList = ref([])
+const summary = ref({
+  totalCount: 0,
+  avgScore: 0,
+  currentSalary: 0,
+  totalSalaryChange: 0
+})
 
 // 计算平均分数
 const averageScore = computed(() => {
-  if (historyList.value.length === 0) return 0
-  const total = historyList.value.reduce((sum, item) => sum + (item.score || 0), 0)
-  return Math.round(total / historyList.value.length)
+  return Number(summary.value.avgScore || 0)
 })
 
 // 计算总薪资变化
 const totalSalaryChange = computed(() => {
-  return historyList.value.reduce((sum, item) => sum + (item.salaryChange || 0), 0)
+  return Number(summary.value.totalSalaryChange || 0)
 })
 
 // 薪资变化样式类
@@ -189,11 +193,8 @@ const totalSalaryChangeClass = computed(() => {
 })
 
 
-// 获取关卡名称（从用户选择的选项中提取或使用默认名称）
 const getLevelName = (item) => {
-  // 这里可以根据实际需要从 levelId 获取关卡名称
-  // 由于后端接口没有直接返回关卡名称，暂时使用默认格式
-  return `技术挑战 #${item.id.toString().slice(-6)}`
+  return item.levelName || `闯关记录 #${item.levelId || item.id}`
 }
 
 // 获取分数类型
@@ -232,11 +233,15 @@ const viewResult = (id) => {
 const fetchHistory = async () => {
   loading.value = true
   try {
-    const data = await getUserLevelHistory()
-    historyList.value = data || []
+    const [summaryData, listData] = await Promise.all([
+      getRecordSummary(),
+      getRecordList()
+    ])
+    summary.value = { ...summary.value, ...(summaryData || {}) }
+    historyList.value = Array.isArray(listData) ? listData : []
   } catch (error) {
     console.error('获取历史记录失败:', error)
-    ElMessage.error('获取历史记录失败')
+    ElMessage.error('获取闯关记录失败，请稍后重试')
   } finally {
     loading.value = false
   }
@@ -496,6 +501,116 @@ onMounted(() => {
 .empty-state :deep(.el-empty__description) {
   color: var(--text-secondary);
   font-size: 16px;
+}
+
+/* 薪跃品牌视觉：清爽青绿色为主，金色用于成长反馈 */
+.history-container {
+  background: #f3f9f8;
+}
+
+.main-content {
+  max-width: 1180px;
+  padding: 52px 30px 80px;
+}
+
+.page-header {
+  margin-bottom: 36px;
+}
+
+.header-content {
+  padding: 24px 0;
+}
+
+.header-text h1 {
+  color: #17324d;
+  font-size: 38px;
+  letter-spacing: 0;
+}
+
+.header-text p {
+  color: #557493;
+  font-size: 16px;
+}
+
+.header-actions .el-button {
+  border-radius: 8px !important;
+  padding: 12px 22px !important;
+}
+
+.stats-section :deep(.el-card),
+.history-section :deep(.el-card) {
+  border: 1px solid #cce7e3 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(28, 91, 93, 0.1) !important;
+}
+
+.stats-section :deep(.el-card) {
+  height: 112px;
+}
+
+.stat-icon,
+.arrow-icon {
+  color: #0f766e;
+}
+
+.stat-number.positive,
+.salary-positive {
+  color: #0f766e;
+}
+
+.stat-number.negative,
+.salary-negative {
+  color: #d65a4a;
+}
+
+.card-header span {
+  color: #17324d;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.history-items {
+  gap: 14px;
+}
+
+.history-item {
+  border: 1px solid #cce7e3;
+  border-radius: 10px;
+  padding: 20px 22px;
+  background: #fff;
+}
+
+.history-item:hover {
+  border-color: #e7bf55;
+  box-shadow: 0 8px 22px rgba(28, 91, 93, 0.14);
+}
+
+.level-name {
+  color: #17324d;
+  font-size: 18px;
+  letter-spacing: 0;
+}
+
+.challenge-time,
+.comment {
+  color: #557493;
+}
+
+.salary-change {
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .stats-section :deep(.el-col) {
+    width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-section :deep(.el-col) {
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
