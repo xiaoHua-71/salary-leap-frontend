@@ -23,12 +23,22 @@
             
             <!-- 自定义加载区域 -->
             <div v-if="generating" class="custom-loading-area">
-              <img 
-                :src="loadingIcon" 
-                alt="生成中..." 
-                class="custom-loading-icon"
-                :style="{ left: loadingPosition.x + 'px', top: loadingPosition.y + 'px' }"
-              />
+              <div class="binary-loader" role="status" aria-label="正在生成关卡">
+                <div class="binary-stream" aria-hidden="true">
+                  <span
+                    v-for="(bit, index) in binaryBits"
+                    :key="`generate-bit-${index}`"
+                    :style="{ '--delay': `${index * 0.07}s` }"
+                  >{{ bit }}</span>
+                </div>
+                <div class="binary-core" aria-hidden="true">
+                  <span class="core-pixel pixel-one"></span>
+                  <span class="core-pixel pixel-two"></span>
+                  <span class="core-pixel pixel-three"></span>
+                  <span class="core-pixel pixel-four"></span>
+                </div>
+                <div class="binary-label" aria-hidden="true">01 / BUILDING</div>
+              </div>
               <div class="loading-text">正在生成关卡中...</div>
               <div class="progress-container">
                 <el-progress 
@@ -216,12 +226,22 @@
               
               <!-- 提交答案加载区域 -->
               <div v-if="submitting" class="custom-loading-area submit-loading">
-                <img 
-                  :src="loadingIcon" 
-                  alt="提交中..." 
-                  class="custom-loading-icon"
-                  :style="{ left: submitLoadingPosition.x + 'px', top: submitLoadingPosition.y + 'px' }"
-                />
+                <div class="binary-loader" role="status" aria-label="正在提交答案">
+                  <div class="binary-stream" aria-hidden="true">
+                    <span
+                      v-for="(bit, index) in binaryBits"
+                      :key="`submit-bit-${index}`"
+                      :style="{ '--delay': `${index * 0.07}s` }"
+                    >{{ bit }}</span>
+                  </div>
+                  <div class="binary-core" aria-hidden="true">
+                    <span class="core-pixel pixel-one"></span>
+                    <span class="core-pixel pixel-two"></span>
+                    <span class="core-pixel pixel-three"></span>
+                    <span class="core-pixel pixel-four"></span>
+                  </div>
+                  <div class="binary-label" aria-hidden="true">01 / CHECKING</div>
+                </div>
                 <div class="loading-text">正在提交答案...</div>
                 <div class="progress-container">
                   <el-progress 
@@ -256,7 +276,6 @@ import {
   Star
 } from '@element-plus/icons-vue'
 import GlobalNavbar from '../components/GlobalNavbar.vue'
-import loadingIcon from '../assets/loading.png'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -278,49 +297,7 @@ const submitProgress = ref(0)
 let generateProgressInterval = null
 let submitProgressInterval = null
 
-// 加载图标随机移动相关
-const loadingPosition = ref({ x: 0, y: 0 })
-const submitLoadingPosition = ref({ x: 0, y: 0 })
-let loadingInterval = null
-let submitLoadingInterval = null
-
-// 随机移动函数
-const getRandomPosition = (containerWidth = 300, containerHeight = 180, iconSize = 40) => {
-  // 限制图标在容器上半部分活动，避免与文案和进度条重叠
-  const maxY = Math.min(containerHeight - 120, 35) // 保留底部给文案和进度条
-  return {
-    x: Math.random() * (containerWidth - iconSize - 10) + 5, // 左右留5px边距
-    y: Math.random() * maxY + 5 // 上方留5px边距
-  }
-}
-
-// 开始随机移动
-const startRandomMovement = (positionRef, intervalRef) => {
-  if (intervalRef) {
-    clearInterval(intervalRef)
-  }
-  
-  // 根据屏幕大小调整容器尺寸
-  const isMobile = window.innerWidth <= 768
-  const containerWidth = isMobile ? 250 : 300
-  const containerHeight = isMobile ? 160 : 180
-  const iconSize = isMobile ? 35 : 40
-  
-  // 初始位置
-  positionRef.value = getRandomPosition(containerWidth, containerHeight, iconSize)
-  
-  // 每800ms移动一次（稍微慢一点，更优雅）
-  return setInterval(() => {
-    positionRef.value = getRandomPosition(containerWidth, containerHeight, iconSize)
-  }, 800)
-}
-
-// 停止随机移动
-const stopRandomMovement = (intervalRef) => {
-  if (intervalRef) {
-    clearInterval(intervalRef)
-  }
-}
+const binaryBits = '01101001011011100110100101110100'.split('')
 
 // 进度条模拟逻辑
 const simulateProgress = (progressRef, type = 'generate') => {
@@ -586,33 +563,18 @@ const truncateText = (text, maxLength) => {
   return text.substring(0, maxLength) + '...'
 }
 
-// 监听生成状态变化
+// 监听加载状态，确保进度模拟定时器及时清理
 watch(generating, (newVal) => {
-  if (newVal) {
-    loadingInterval = startRandomMovement(loadingPosition, loadingInterval)
-  } else {
-    stopRandomMovement(loadingInterval)
-    loadingInterval = null
-    // 确保进度条定时器也被清理
-    if (generateProgressInterval) {
-      stopProgress(generateProgressInterval)
-      generateProgressInterval = null
-    }
+  if (!newVal && generateProgressInterval) {
+    stopProgress(generateProgressInterval)
+    generateProgressInterval = null
   }
 })
 
-// 监听提交状态变化
 watch(submitting, (newVal) => {
-  if (newVal) {
-    submitLoadingInterval = startRandomMovement(submitLoadingPosition, submitLoadingInterval)
-  } else {
-    stopRandomMovement(submitLoadingInterval)
-    submitLoadingInterval = null
-    // 确保进度条定时器也被清理
-    if (submitProgressInterval) {
-      stopProgress(submitProgressInterval)
-      submitProgressInterval = null
-    }
+  if (!newVal && submitProgressInterval) {
+    stopProgress(submitProgressInterval)
+    submitProgressInterval = null
   }
 })
 
@@ -628,8 +590,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   // 组件销毁时清理所有定时器
-  stopRandomMovement(loadingInterval)
-  stopRandomMovement(submitLoadingInterval)
   stopProgress(generateProgressInterval)
   stopProgress(submitProgressInterval)
 })
@@ -991,14 +951,78 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-.custom-loading-icon {
+.binary-loader {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  transition: all 0.3s ease-in-out;
-  z-index: 2;
-  /* 限制图标活动范围，避免与文案和进度条重叠 */
-  top: 5px;
+  inset: 14px 18px 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--primary-brown);
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+}
+
+.binary-stream {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  color: #6aa59d;
+  font-size: 13px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.binary-stream span {
+  animation: binary-pulse 1.2s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+.binary-core {
+  position: relative;
+  width: 58px;
+  height: 42px;
+  border: 2px solid var(--accent-gold);
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 0 0 5px rgba(244, 185, 66, 0.12), 0 5px 16px rgba(28, 91, 93, 0.12);
+  animation: core-scan 1.6s ease-in-out infinite;
+}
+
+.core-pixel {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--primary-brown);
+  animation: pixel-blink 1.4s steps(2, end) infinite;
+}
+
+.pixel-one { top: 8px; left: 10px; }
+.pixel-two { top: 8px; right: 10px; animation-delay: 0.2s; }
+.pixel-three { bottom: 8px; left: 20px; animation-delay: 0.4s; }
+.pixel-four { bottom: 8px; right: 20px; animation-delay: 0.6s; }
+
+.binary-label {
+  color: var(--text-secondary);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  opacity: 0.8;
+}
+
+@keyframes binary-pulse {
+  0%, 100% { opacity: 0.25; transform: translateY(3px); }
+  50% { opacity: 1; color: var(--accent-copper); transform: translateY(-2px); }
+}
+
+@keyframes core-scan {
+  0%, 100% { transform: translateY(3px); opacity: 0.72; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+
+@keyframes pixel-blink {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
 }
 
 .loading-text {
@@ -1157,12 +1181,7 @@ onUnmounted(() => {
   
   .custom-loading-area {
     width: 250px;
-    height: 80px;
-  }
-  
-  .custom-loading-icon {
-    width: 35px;
-    height: 35px;
+    height: 150px;
   }
   
   .progress-container {
