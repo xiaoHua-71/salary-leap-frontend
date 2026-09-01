@@ -10,9 +10,9 @@ export const getLevelDetail = (id) => {
   return request.get(`/level/${id}`)
 }
 
-// 分页获取精选关卡列表
-export const getFeaturedLevels = (current = 1, pageSize = 10) => {
-  return request.get('/level/featured', {
-    params: { current, pageSize }
-  })
+// 获取人气关卡列表（无需登录）
+export const getHotLevels = (limit = 10, direction) => {
+  const params = { limit }
+  if (direction) params.direction = direction
+  return request.get('/level/hot', { params })
 }

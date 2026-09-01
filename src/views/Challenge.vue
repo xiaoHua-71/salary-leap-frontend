@@ -43,18 +43,18 @@
           </div>
         </el-card>
 
-        <!-- 精选关卡选择区域 -->
+        <!-- 人气关卡选择区域 -->
         <el-card class="featured-levels-card">
           <template #header>
             <div class="card-header">
-              <h3>或选择精选关卡</h3>
+              <h3>或选择人气关卡</h3>
               <el-icon class="star-icon"><Star /></el-icon>
             </div>
           </template>
           
           <div v-loading="featuredLoading" class="featured-content">
             <div v-if="featuredLevels.length === 0 && !featuredLoading" class="no-featured">
-              <el-empty description="暂无精选关卡" />
+              <el-empty description="暂无人气关卡" />
             </div>
             
             <div v-else class="featured-grid">
@@ -105,24 +105,11 @@
                   <span class="target-salary">
                     ¥{{ level.targetSalary?.toLocaleString() || 0 }}/月
                   </span>
-                  <span class="create-time">
-                    {{ formatTime(level.createTime) }}
+                  <span class="play-count">
+                    {{ level.playCount || 0 }} 人已作答
                   </span>
                 </div>
               </div>
-            </div>
-
-            <!-- 分页 -->
-            <div v-if="featuredTotal > 0" class="featured-pagination">
-              <el-pagination
-                v-model:current-page="featuredCurrent"
-                v-model:page-size="featuredPageSize"
-                :total="featuredTotal"
-                :page-sizes="[6, 12, 18]"
-                layout="prev, pager, next, sizes"
-                @current-change="loadFeaturedLevels"
-                @size-change="loadFeaturedLevels"
-              />
             </div>
           </div>
         </el-card>
@@ -258,7 +245,7 @@
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { generateLevel as generateLevelAPI, getFeaturedLevels } from '../api/level'
+import { generateLevel as generateLevelAPI, getHotLevels, getLevelDetail } from '../api/level'
 import { submitAnswer as submitAnswerAPI } from '../api/userLevel'
 import { ElMessage } from 'element-plus'
 import {
@@ -281,12 +268,9 @@ const currentLevel = ref(null)
 const selectedOptions = ref([])
 const draggedOption = ref(null)
 
-// 精选关卡相关数据
+// 人气关卡相关数据
 const featuredLevels = ref([])
 const featuredLoading = ref(false)
-const featuredCurrent = ref(1)
-const featuredPageSize = ref(6)
-const featuredTotal = ref(0)
 
 // 进度条相关
 const generateProgress = ref(0)
@@ -567,26 +551,32 @@ const resetLevel = () => {
   selectedOptions.value = []
 }
 
-// 加载精选关卡列表
+// 加载人气关卡列表
 const loadFeaturedLevels = async () => {
   featuredLoading.value = true
   try {
-    const response = await getFeaturedLevels(featuredCurrent.value, featuredPageSize.value)
-    featuredLevels.value = response.records || []
-    featuredTotal.value = response.total || 0
+    featuredLevels.value = await getHotLevels(10)
   } catch (error) {
-    console.error('获取精选关卡失败:', error)
-    ElMessage.error('获取精选关卡失败')
+    console.error('获取人气关卡失败:', error)
+    ElMessage.error('获取人气关卡失败')
   } finally {
     featuredLoading.value = false
   }
 }
 
-// 选择精选关卡
-const selectFeaturedLevel = (level) => {
-  currentLevel.value = level
-  selectedOptions.value = []
-  ElMessage.success(`已选择关卡：${level.levelName}`)
+// 选择人气关卡后获取完整题目，选项不在列表接口中返回。
+const selectFeaturedLevel = async (level) => {
+  featuredLoading.value = true
+  try {
+    currentLevel.value = await getLevelDetail(level.id)
+    selectedOptions.value = []
+    ElMessage.success(`已选择关卡：${currentLevel.value.levelName}`)
+  } catch (error) {
+    console.error('获取关卡详情失败:', error)
+    ElMessage.error('获取关卡详情失败')
+  } finally {
+    featuredLoading.value = false
+  }
 }
 
 // 文本截断
@@ -594,12 +584,6 @@ const truncateText = (text, maxLength) => {
   if (!text) return ''
   if (text.length <= maxLength) return text
   return text.substring(0, maxLength) + '...'
-}
-
-// 格式化时间
-const formatTime = (time) => {
-  if (!time) return ''
-  return new Date(time).toLocaleDateString('zh-CN')
 }
 
 // 监听生成状态变化
@@ -637,7 +621,7 @@ onMounted(() => {
   if (!user.value) {
     router.push('/login')
   } else {
-    // 加载精选关卡列表
+    // 加载人气关卡列表
     loadFeaturedLevels()
   }
 })
