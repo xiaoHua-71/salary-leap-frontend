@@ -180,7 +180,7 @@ const getRankingClass = (rank) => {
 const loadRanking = async () => {
   rankingLoading.value = true
   try {
-    const data = await getSalaryRanking(30)
+    const data = await getSalaryRanking()
     rankingList.value = data || []
   } catch (error) {
     console.error('获取排行榜失败:', error)

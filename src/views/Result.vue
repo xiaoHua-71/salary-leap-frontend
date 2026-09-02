@@ -9,7 +9,11 @@
         <div class="score-section">
           <el-card class="score-card">
             <div class="score-display">
-              <div class="score-circle" :class="getScoreClass(resultData.score)">
+              <div
+                class="score-circle"
+                :class="getScoreClass(resultData.score)"
+                :style="{ '--score-percent': `${getScorePercent(resultData.score)}%` }"
+              >
                 <div class="score-number">{{ resultData.score }}</div>
                 <div class="score-label">分</div>
               </div>
@@ -201,6 +205,13 @@ const getScoreClass = (score) => {
   return 'poor'
 }
 
+// 圆环进度使用实际分数，避免按等级固定显示进度
+const getScorePercent = (score) => {
+  const numericScore = Number(score)
+  if (!Number.isFinite(numericScore)) return 0
+  return Math.min(Math.max(numericScore, 0), 100)
+}
+
 // 获取薪资变化样式类
 const getSalaryChangeClass = (change) => {
   if (change > 0) return 'salary-increase'
@@ -300,17 +311,14 @@ onMounted(() => {
 
 .score-circle.excellent {
   --score-color: var(--accent-gold);
-  --score-percent: 80%;
 }
 
 .score-circle.good {
   --score-color: var(--accent-copper);
-  --score-percent: 60%;
 }
 
 .score-circle.poor {
   --score-color: var(--secondary-brown);
-  --score-percent: 40%;
 }
 
 .score-circle::before {
