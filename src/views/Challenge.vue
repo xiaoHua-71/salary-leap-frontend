@@ -598,10 +598,7 @@ onUnmounted(() => {
 <style scoped>
 .challenge-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+  background: var(--bg-primary);
 }
 
 .main-content {
@@ -626,8 +623,8 @@ onUnmounted(() => {
 .featured-levels-card {
   width: 100%;
   max-width: 1200px;
-  box-shadow: 0 8px 32px var(--shadow-heavy);
-  border-radius: 20px;
+  box-shadow: 0 2px 10px var(--shadow-light);
+  border-radius: 10px;
   border: 1px solid var(--border-light);
 }
 

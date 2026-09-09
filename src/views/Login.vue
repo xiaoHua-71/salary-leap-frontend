@@ -125,7 +125,7 @@ const handleLogin = async () => {
 <style scoped>
 .login-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background: var(--bg-primary);
   display: flex;
   flex-direction: column;
 }
@@ -136,19 +136,17 @@ const handleLogin = async () => {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(244, 185, 66, 0.10) 0%, transparent 50%);
+  background: var(--bg-secondary);
 }
 
 .login-box {
   background: var(--bg-card);
-  border: 3px solid var(--border-light);
-  border-radius: 16px;
-  padding: 50px;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 40px;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 20px 60px var(--shadow-medium);
+  box-shadow: 0 5px 20px var(--shadow-light);
   position: relative;
   overflow: hidden;
 }

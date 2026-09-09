@@ -607,7 +607,7 @@ onMounted(async () => {
 <style scoped>
 .admin-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background: var(--bg-primary);
 }
 
 .main-content {
@@ -617,8 +617,8 @@ onMounted(async () => {
 }
 
 .admin-card {
-  box-shadow: 0 8px 32px var(--shadow-heavy);
-  border-radius: 20px;
+  box-shadow: 0 3px 14px var(--shadow-light);
+  border-radius: 10px;
   border: 1px solid var(--border-light);
 }
 

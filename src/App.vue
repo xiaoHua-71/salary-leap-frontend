@@ -76,9 +76,9 @@ onMounted(async () => {
 
 body {
   font-family: Inter, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background: var(--bg-primary);
   color: var(--text-primary);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 #app {
@@ -94,49 +94,50 @@ body {
 
 /* 全局按钮样式 */
 .el-button {
-  border-radius: 6px !important;
+  border-radius: 8px !important;
   font-family: inherit !important;
   font-weight: 500 !important;
-  letter-spacing: 0.5px !important;
-  transition: all 0.3s ease !important;
+  letter-spacing: 0 !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .el-button--primary {
-  background: linear-gradient(135deg, var(--primary-brown) 0%, var(--secondary-brown) 100%) !important;
-  border: 2px solid var(--primary-brown) !important;
-  box-shadow: 0 4px 12px var(--shadow-medium) !important;
+  background: var(--primary-brown) !important;
+  border: 1px solid var(--primary-brown) !important;
+  box-shadow: 0 2px 6px var(--shadow-light) !important;
 }
 
 .el-button--primary:hover {
-  background: linear-gradient(135deg, var(--secondary-brown) 0%, var(--primary-brown) 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px var(--shadow-heavy) !important;
+  background: var(--secondary-brown) !important;
+  border-color: var(--secondary-brown) !important;
+  transform: none !important;
+  box-shadow: 0 4px 10px var(--shadow-medium) !important;
 }
 
 .el-button--default {
   background: var(--bg-card) !important;
-  border: 2px solid var(--border-medium) !important;
+  border: 1px solid var(--border-medium) !important;
   color: var(--text-primary) !important;
 }
 
 .el-button--default:hover {
   background: var(--secondary-sand) !important;
   border-color: var(--primary-brown) !important;
-  transform: translateY(-1px) !important;
+  transform: none !important;
 }
 
 /* 全局卡片样式 */
 .el-card {
-  border: 2px solid var(--border-light) !important;
-  border-radius: 12px !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: 10px !important;
   background: var(--bg-card) !important;
-  box-shadow: 0 8px 24px var(--shadow-light) !important;
-  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 10px var(--shadow-light) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .el-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 12px 32px var(--shadow-medium) !important;
+  transform: none !important;
+  box-shadow: 0 5px 16px var(--shadow-medium) !important;
   border-color: var(--border-medium) !important;
 }
 
@@ -144,6 +145,63 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0;
+}
+
+/* Shared surface and form rhythm across every view. */
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner,
+.el-input-number {
+  border-radius: 8px !important;
+  box-shadow: 0 0 0 1px var(--border-light) inset !important;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  box-shadow: 0 0 0 1px var(--primary-brown) inset !important;
+}
+
+.el-table {
+  --el-table-border-color: var(--border-light);
+  --el-table-header-bg-color: var(--bg-secondary);
+  --el-table-row-hover-bg-color: var(--secondary-sand);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.el-dialog {
+  border-radius: 12px !important;
+}
+
+/* Keep decorative treatments consistent with the restrained brand system. */
+.feature-icon,
+.header-icon {
+  background: var(--primary-brown) !important;
+  box-shadow: 0 4px 12px var(--shadow-light) !important;
+}
+.challenge-btn,
+.login-button,
+.register-button {
+  background: var(--primary-brown) !important;
+  border: 1px solid var(--primary-brown) !important;
+  box-shadow: 0 3px 10px var(--shadow-light) !important;
+}
+.feature-card,
+.ranking-column,
+.history-item,
+.score-card,
+.generate-card,
+.featured-levels-card {
+  border-radius: 10px !important;
+}
+.ranking-column,
+.ranking-item {
+  box-shadow: 0 2px 8px var(--shadow-light) !important;
+}
+
+@media (max-width: 768px) {
+  .el-button { min-height: 38px; }
 }
 </style>

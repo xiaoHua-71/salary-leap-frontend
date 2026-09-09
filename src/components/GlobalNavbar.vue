@@ -111,11 +111,11 @@ const handleLogout = async () => {
 
 <style scoped>
 .global-navbar {
-  background: linear-gradient(135deg, var(--primary-brown) 0%, var(--secondary-brown) 100%);
+  background: var(--primary-brown);
   color: var(--bg-card);
-  height: 70px;
+  height: 64px;
   padding: 0;
-  box-shadow: 0 4px 20px var(--shadow-medium);
+  box-shadow: 0 2px 10px rgba(16, 42, 67, 0.14);
   position: relative;
   z-index: 100;
 }
@@ -126,8 +126,8 @@ const handleLogout = async () => {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-copper) 100%);
+  height: 2px;
+  background: var(--accent-gold);
 }
 
 .navbar-content {
@@ -137,7 +137,7 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 24px;
 }
 
 .logo {
@@ -146,7 +146,7 @@ const handleLogout = async () => {
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 2px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: none;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -159,7 +159,7 @@ const handleLogout = async () => {
   font-size: 28px;
   margin-right: 12px;
   color: var(--accent-gold);
-  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+  filter: none;
 }
 
 .nav-menu {
@@ -179,9 +179,9 @@ const handleLogout = async () => {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(218, 165, 32, 0.2);
+  background: rgba(244, 185, 66, 0.16);
   border: 1px solid var(--accent-gold);
-  border-radius: 25px;
+  border-radius: 8px;
   backdrop-filter: blur(10px);
   font-size: 14px;
   font-weight: 600;
@@ -202,7 +202,7 @@ const handleLogout = async () => {
   align-items: center;
   gap: 12px;
   padding: 8px 16px;
-  border-radius: 25px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;

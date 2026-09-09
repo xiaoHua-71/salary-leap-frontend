@@ -247,10 +247,7 @@ onMounted(() => {
 <style scoped>
 .result-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+  background: var(--bg-primary);
 }
 
 .main-content {
@@ -275,7 +272,7 @@ onMounted(() => {
   border: 3px solid var(--border-light) !important;
   border-radius: 16px !important;
   background: var(--bg-card) !important;
-  box-shadow: 0 12px 40px var(--shadow-medium) !important;
+  box-shadow: 0 3px 14px var(--shadow-light) !important;
   position: relative;
   overflow: hidden;
 }

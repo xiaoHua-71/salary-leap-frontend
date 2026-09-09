@@ -264,10 +264,7 @@ onMounted(() => {
 <style scoped>
 .history-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(210, 180, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(139, 115, 85, 0.1) 0%, transparent 50%);
+  background: var(--bg-primary);
 }
 
 .main-content {

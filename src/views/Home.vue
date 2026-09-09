@@ -271,15 +271,15 @@ onMounted(() => {
 }
 
 .hero-title {
-  font-size: 56px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-  letter-spacing: 3px;
-  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--bg-card) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 60px;
+  font-weight: 650;
+  line-height: 1.15;
+  margin-bottom: 18px;
+  color: #ffffff;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
+  text-shadow: 0 3px 16px rgba(0, 0, 0, 0.38);
 }
 
 .hero-subtitle {
@@ -412,7 +412,7 @@ onMounted(() => {
 
 .feature-card {
   text-align: center;
-  padding: 40px 30px;
+  padding: 36px 30px 34px;
   position: relative;
   overflow: hidden;
   background: var(--bg-card) !important;
@@ -442,18 +442,36 @@ onMounted(() => {
 }
 
 .feature-icon {
-  margin-bottom: 24px;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: var(--secondary-sand) !important;
   color: var(--primary-brown);
+  box-shadow: none !important;
   position: relative;
   z-index: 2;
 }
 
+.feature-card:nth-child(2) .feature-icon {
+  background: #fff5d9 !important;
+  color: #b7791f;
+}
+
+.feature-card:nth-child(3) .feature-icon {
+  background: #fce9df !important;
+  color: var(--accent-copper);
+}
+
 .feature-card h3 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;
   color: var(--text-primary);
-  letter-spacing: 1px;
+  letter-spacing: 0;
   position: relative;
   z-index: 2;
 }
@@ -696,7 +714,9 @@ onMounted(() => {
 @media (max-width: 768px) {
   
   .hero-title {
-    font-size: 40px;
+    font-size: 42px;
+    letter-spacing: 0.08em;
+    text-indent: 0.08em;
   }
   
   .hero-desc {
@@ -759,7 +779,7 @@ onMounted(() => {
   }
   
   .hero-title {
-    font-size: 32px;
+    font-size: 34px;
   }
   
   .section-title {
