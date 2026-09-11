@@ -101,10 +101,19 @@
           />
         </el-form-item>
 
-        <el-form-item label="学习方向" prop="direction">
+        <el-form-item class="direction-form-item" prop="direction">
+          <template #label>
+            <span class="direction-label">
+              <el-icon><Compass /></el-icon>
+              学习方向
+              <span class="direction-optional">可选</span>
+            </span>
+          </template>
           <el-select
             v-model="registerForm.direction"
+            class="direction-select"
             placeholder="请选择学习方向"
+            popper-class="direction-select-popper"
             size="large"
             @change="handleDirectionChange"
           >
@@ -118,9 +127,10 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item v-if="registerForm.direction === 'custom'" prop="customDirection">
+        <el-form-item v-if="registerForm.direction === 'custom'" class="custom-direction-form-item" prop="customDirection">
           <el-input
             v-model="registerForm.customDirection"
+            class="custom-direction-input"
             placeholder="请输入学习方向"
             size="large"
           />
@@ -162,7 +172,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import * as userApi from '../api/user'
 import { ElMessage } from 'element-plus'
-import { User, Lock, Avatar, Message, Key, UserFilled, Flag } from '@element-plus/icons-vue'
+import { User, Lock, Avatar, Message, Key, UserFilled, Flag, Compass } from '@element-plus/icons-vue'
 import GlobalNavbar from '../components/GlobalNavbar.vue'
 
 const router = useRouter()
@@ -434,6 +444,95 @@ const handleRegister = async () => {
   margin: 0;
   height: 40px;
   color: var(--primary-brown);
+}
+
+.direction-form-item {
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.direction-form-item :deep(.el-form-item__label) {
+  height: auto;
+  line-height: 1;
+  padding: 0 0 10px;
+}
+
+.direction-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.direction-label .el-icon {
+  color: var(--accent-copper);
+  font-size: 17px;
+}
+
+.direction-optional {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.direction-select {
+  width: 100%;
+}
+
+.direction-select :deep(.el-select__wrapper) {
+  min-height: 42px;
+  border: 2px solid var(--border-light);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  box-shadow: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.direction-select :deep(.el-select__wrapper:hover) {
+  border-color: var(--border-medium);
+}
+
+.direction-select :deep(.el-select__wrapper.is-focused) {
+  border-color: var(--primary-brown);
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
+}
+
+.direction-select :deep(.el-select__placeholder),
+.direction-select :deep(.el-select__selected-item) {
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.custom-direction-form-item {
+  margin-top: -8px;
+}
+
+.custom-direction-input {
+  width: 100%;
+}
+
+:global(.direction-select-popper.el-popper) {
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px var(--shadow-medium);
+}
+
+:global(.direction-select-popper .el-select-dropdown__item) {
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+:global(.direction-select-popper .el-select-dropdown__item.is-hovering),
+:global(.direction-select-popper .el-select-dropdown__item:hover) {
+  background: var(--bg-secondary);
+  color: var(--primary-brown);
+}
+
+:global(.direction-select-popper .el-select-dropdown__item.is-selected) {
+  color: var(--primary-brown);
+  font-weight: 600;
 }
 
 .register-button {

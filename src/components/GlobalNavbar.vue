@@ -56,6 +56,10 @@
                   <el-icon><Setting /></el-icon>
                   管理后台
                 </el-dropdown-item>
+                <el-dropdown-item divided @click="$router.push('/profile')">
+                  <el-icon><EditPen /></el-icon>
+                  修改个人资料
+                </el-dropdown-item>
                 <el-dropdown-item divided @click="handleLogout">
                   <el-icon><SwitchButton /></el-icon>
                   退出登录
@@ -81,7 +85,8 @@ import {
   SwitchButton, 
   Coin,
   User,
-  Setting
+  Setting,
+  EditPen
 } from '@element-plus/icons-vue'
 
 // Props

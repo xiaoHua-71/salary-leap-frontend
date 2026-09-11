@@ -58,6 +58,18 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // 更新当前用户资料，并同步本地登录状态
+  const updateUser = async (updateData) => {
+    const userData = await userApi.updateUser(updateData)
+    user.value = userData
+    return userData
+  }
+
+  // 修改当前用户密码
+  const updatePassword = async (passwordData) => {
+    return userApi.updatePassword(passwordData)
+  }
+
   // 更新用户薪资
   const updateUserSalary = (newSalary) => {
     if (user.value) {
@@ -72,6 +84,8 @@ export const useUserStore = defineStore('user', () => {
     registerUser,
     logoutUser,
     getCurrentUser,
+    updateUser,
+    updatePassword,
     updateUserSalary
   }
 })

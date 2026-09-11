@@ -24,3 +24,13 @@ export const logout = () => {
 export const getCurrentUser = () => {
   return request.get('/user/current')
 }
+
+// 更新当前登录用户的个人资料
+export const updateUser = (data) => {
+  return request.post('/user/update', data)
+}
+
+// 修改当前登录用户的密码
+export const updatePassword = (data) => {
+  return request.post('/user/updatePassword', data)
+}
