@@ -101,6 +101,31 @@
           />
         </el-form-item>
 
+        <el-form-item label="学习方向" prop="direction">
+          <el-select
+            v-model="registerForm.direction"
+            placeholder="请选择学习方向"
+            size="large"
+            @change="handleDirectionChange"
+          >
+            <el-option
+              v-for="direction in recommendedDirections"
+              :key="direction"
+              :label="direction"
+              :value="direction"
+            />
+            <el-option label="自定义" value="custom" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="registerForm.direction === 'custom'" prop="customDirection">
+          <el-input
+            v-model="registerForm.customDirection"
+            placeholder="请输入学习方向"
+            size="large"
+          />
+        </el-form-item>
+
         <el-form-item>
           <el-button
             type="primary"
@@ -156,8 +181,18 @@ const registerForm = reactive({
   email: '',
   code: '',
   password: '',
-  checkPassword: ''
+  checkPassword: '',
+  direction: '',
+  customDirection: ''
 })
+
+const recommendedDirections = ['Java后端开发', '前端开发', 'Go开发', 'Agent开发']
+
+const handleDirectionChange = (direction) => {
+  if (direction !== 'custom') {
+    registerForm.customDirection = ''
+  }
+}
 
 // 确认密码验证函数
 const validateCheckPassword = (rule, value, callback) => {
@@ -192,6 +227,18 @@ const registerRules = {
   ],
   code: [
     { required: true, message: '请输入邮箱验证码', trigger: 'blur' }
+  ],
+  customDirection: [
+    {
+      validator: (rule, value, callback) => {
+        if (registerForm.direction === 'custom' && !value.trim()) {
+          callback(new Error('请输入学习方向'))
+          return
+        }
+        callback()
+      },
+      trigger: 'blur'
+    }
   ]
 }
 
@@ -222,20 +269,26 @@ const handleRegister = async () => {
   try {
     await registerFormRef.value.validate()
     loading.value = true
+    const direction = registerForm.direction === 'custom'
+      ? registerForm.customDirection.trim()
+      : registerForm.direction
+    const directionPayload = direction ? { direction } : {}
     
     const registerData = registerType.value === 'email'
       ? {
           registerType: 'email',
           email: registerForm.email,
           code: registerForm.code,
-          password: registerForm.password
+          password: registerForm.password,
+          ...directionPayload
         }
       : {
           registerType: 'password',
           username: registerForm.username,
           nickname: registerForm.nickname,
           password: registerForm.password,
-          checkPassword: registerForm.checkPassword
+          checkPassword: registerForm.checkPassword,
+          ...directionPayload
         }
 
     await userStore.registerUser(registerData)

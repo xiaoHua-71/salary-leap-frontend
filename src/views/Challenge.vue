@@ -147,6 +147,15 @@
               </span>
             </div>
           </div>
+
+          <el-alert
+            v-if="currentLevel.source === 'PRESET'"
+            title="当前为系统预置题"
+            type="info"
+            :closable="false"
+            show-icon
+            class="preset-level-notice"
+          />
           
           <div class="level-desc">
             <h3>需求描述：</h3>
@@ -369,25 +378,18 @@ const formatDescription = (desc) => {
 
 // 生成关卡
 const generateLevel = async () => {
-  console.log('用户信息:', user.value)
-  console.log('用户薪资:', user.value?.salary)
-  
   if (!user.value) {
     ElMessage.error('用户未登录，请先登录')
     router.push('/login')
     return
   }
   
-  // 如果用户没有薪资信息，设置默认薪资为 5000
-  const userSalary = user.value.salary || 5000
-  console.log('使用的薪资:', userSalary)
-
   generating.value = true
   // 启动进度条模拟
   generateProgressInterval = simulateProgress(generateProgress, 'generate')
   
   try {
-    const levelData = await generateLevelAPI(userSalary)
+    const levelData = await generateLevelAPI()
     currentLevel.value = levelData
     selectedOptions.value = []
     
